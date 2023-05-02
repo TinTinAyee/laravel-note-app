@@ -3,8 +3,9 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Edit Blog Manully</h1>
+                <div class="col-sm-6 ">
+                    <a href="{{ route('blog.index') }}" class="text-decoration-none font-weight-bold">
+                        <i class="fa-solid fa-arrow-left p-2"></i>Back</a>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -24,7 +25,7 @@
                         <h3>Edit Blog</h3>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('blog.update', $blog->id) }}" method="POST">
+                        <form action="{{ route('blog.update', $blog->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             {{-- {{ method_field('PATCH') }} --}}
 
@@ -43,6 +44,45 @@
                                 @if ($errors->has('description'))
                                     <div class="error text-danger">{{ $errors->first('description') }}</div>
                                 @endif
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1">Image</label>
+                                <input type="file" name="image" class="form-control">
+
+                                @if ($errors->has('image'))
+                                    <div class="error text-danger">{{ $errors->first('image') }}</div>
+                                @endif
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1">Author</label>
+                                <select name="author_id" id="" class="form-control">
+                                    @foreach ($authors as $author)
+                                        <option value="{{ $author->id }}"
+                                            {{ $blog->author_id == $author->id ? 'selected' : '' }}>
+                                            {{ $author->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @if ($errors->has('author_id'))
+                                    <div class="error text-danger">{{ $errors->first('author_id') }}</div>
+                                @endif
+                            </div>
+
+                            <div class="mb-3">
+                                {{-- <input type="checkbox" name="status" {{ $blog->status == 1 ? 'checked' : '' }} />
+                                <label for="">Active</label> --}}
+
+                                <input type="radio" id="option2" name="status" value="1"
+                                    {{ $blog->status == true ? 'checked' : '' }}>
+                                <label class="mr-3">Active</label>
+
+                                <input type="radio" id="option1" name="status" value="0"
+                                    {{ $blog->status == false ? 'checked' : '' }}>
+                                <label>Not Active</label>
+
                             </div>
 
                             <button type="submit" class="btn btn-primary">Update</button>

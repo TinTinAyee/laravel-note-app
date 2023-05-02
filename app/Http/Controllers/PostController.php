@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -19,7 +21,7 @@ class PostController extends Controller
 
         // dd($data);
 
-        return view('post.index',compact('data'));
+        return view('backend.post.index',compact('data'));
     }
 
     /**
@@ -30,7 +32,7 @@ class PostController extends Controller
     public function create()
     {
         //
-        return view('post.create');
+        return view('backend.post.create');
     }
 
     /**
@@ -39,16 +41,29 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        //
-        Post::create([
-            'title'=> $request->title,
-            'description'=> $request->description,
-            'is_active'=>$request->has('is_active') ? true:false,
-       ]);
+        $data = $request->validated();
 
-        // Post::create($request->all());
+       if($request->hasFile('image'))
+        {
+            //first way to upload image in public folder
+
+            // $imageName = time().'.'.$request->image->extension();
+
+            // $request->image->move(public_path('blog_image'),$imageName);
+
+            //This is second way to upload image in storage folder to link public folder
+
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->storeAs('public',$imageName);
+            $data['image'] = $imageName;
+
+        }
+
+        $data['is_active']=$request->has('is_active') ? true:false;
+
+        Post::create($data);
 
         return redirect()->route('post.index');
     }
@@ -64,7 +79,7 @@ class PostController extends Controller
         //
         $result = Post::where('id',$id)->first();
 
-        return view('post.view',compact('result'));
+        return view('backend.post.view',compact('result'));
     }
 
     /**
@@ -76,10 +91,10 @@ class PostController extends Controller
     public function edit($id)
     {
         //
-         $result = Post::where('id',$id)->first();
+        $result = Post::where('id',$id)->first();
         // dd($result);
 
-        return view('post.edit',compact('result'));
+        return view('backend.post.edit',compact('result'));
     }
 
     /**
@@ -89,15 +104,22 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, Post $post)
     {
-        $data = Post::where('id',$id)->first();
 
-        $data->update([
-            'title'=> $request->title,
-            'description'=> $request->description,
-            'is_active'=>$request->has('is_active') ? true:false,
-        ]);
+        $data = $request->validated();
+
+        if($request->hasFile('image'))
+        {
+            Storage::delete('public/'.$post->image);
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->storeAs('public',$imageName);
+            $data['image'] = $imageName;
+        }
+
+        $data['is_active'] = $request->has('is_active') ? true:false;
+
+        $post->update($data);
 
         return redirect()->route('post.index');
     }

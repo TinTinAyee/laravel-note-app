@@ -25,7 +25,10 @@ class BlogRequest extends FormRequest
     {
         return [
             'name'=> 'required',
-            'description'=> 'required'
+            'description'=> 'required',
+            'image'=>'nullable|mimes:jpg,png,jpeg',
+            'author_id'=>'required',
+            'status'=>''
         ];
     }
 }

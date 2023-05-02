@@ -1,27 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <!-- Styles -->
-
-    <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-        }
-    </style>
-</head>
-
-<body class="antialiased">
-
+@extends('backend.layout.master')
+@section('content')
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-3 mb-5 bg-body rounded">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
@@ -52,7 +30,7 @@
                         <h3 class="text-center">Edit Note</h3>
                     </div>
 
-                    <form action="{{ route('post.update', $result->id) }}" method="POST">
+                    <form action="{{ route('post.update', $result->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         {{ method_field('PATCH') }}
 
@@ -67,8 +45,14 @@
                                 <textarea type="text" class="form-control" rows="5" name="description">{{ $result->description }}</textarea>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="" class="d-block">Image</label>
+                                <img src="{{ asset('storage/' . $result->image) }}" alt="img" width="50px">
+                                <input type="file" name="image" id="" class="form-control mt-3">
+                            </div>
+
                             <div>
-                                @if (($result->is_active) == true)
+                                @if ($result->is_active == true)
                                     <input type="checkbox" name="is_active" checked />
                                 @else
                                     <input type="checkbox" name="is_active" />
@@ -86,9 +70,4 @@
         </div>
     </div>
     </div>
-
-
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-</body>
-
-</html>
+@endsection

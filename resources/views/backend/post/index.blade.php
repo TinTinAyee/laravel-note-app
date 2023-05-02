@@ -1,27 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <!-- Styles -->
-
-    <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-        }
-    </style>
-</head>
-
-<body class="antialiased">
-
+@extends('backend.layout.master')
+@section('content')
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-3 mb-5 bg-body rounded">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
@@ -56,10 +34,22 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">{{ $val->title }}</h3>
-                                <h6 class="card-text text-danger font-weight-bold">is_active : {{ $val->is_active }}
+
+                                {{-- <h6 class="card-text text-danger font-weight-bold">is_active : {{ $val->is_active }} --}}
+
+                                <h6 class="card-text font-weight-bold">Status :
+
+                                    @if ($val->is_active == true)
+                                        <label for="" class="badge badge-success">Active</label>
+                                    @else
+                                        <label for="" class="badge badge-danger">Not Active</label>
+                                    @endif
                                 </h6>
                             </div>
                             <p class="card-text">{{ $val->description }}</p>
+
+                            <img src="{{ asset('storage/' . $val->image) }}" alt="image" width="50px">
+
                         </div>
                         <div class="card-footer d-flex">
                             <a href="{{ route('post.edit', $val->id) }}" class="btn btn-primary ">Edit</a>
@@ -78,9 +68,4 @@
         </div>
 
     </div>
-
-
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-</body>
-
-</html>
+@endsection

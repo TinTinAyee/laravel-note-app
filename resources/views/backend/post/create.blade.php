@@ -1,27 +1,6 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('backend.layout.master')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <!-- Styles -->
-
-    <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-        }
-    </style>
-</head>
-
-<body class="antialiased">
-
+@section('content')
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-3 mb-5 bg-body rounded">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
@@ -55,7 +34,7 @@
                         <h3 class="text-center">Create Post</h3>
                     </div>
 
-                    <form action="{{ route('post.store') }}" method="POST">
+                    <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="card-body">
                             <div class="mb-3">
@@ -69,6 +48,13 @@
                                 <textarea type="text" class="form-control" rows="5" name="description" placeholder="Description...."
                                     value="" required></textarea>
 
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1">Image</label>
+                                <input type="file" name="image" class="form-control">
+                                @if ($errors->has('image'))
+                                    <div class="error text-danger">{{ $errors->first('image') }}</div>
+                                @endif
                             </div>
                             <div>
                                 <input type="checkbox" name="is_active" id="">
@@ -84,9 +70,4 @@
         </div>
     </div>
     </div>
-
-
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-</body>
-
-</html>
+@endsection

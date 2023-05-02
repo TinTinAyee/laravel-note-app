@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminListController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TodoListController;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
@@ -29,11 +32,13 @@ Route::get('/', function () {
 
 Route::resource('blogs',BlogsController::class);
 
-Route::resource('post',PostController::class);
+// Route::resource('post',PostController::class);
 
 //manually
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//Route prefix group
 
 Route::group(['prefix'=>'admin'],function (){
 
@@ -55,9 +60,18 @@ Route::get('admin',[AdminController::class,'index'])->name('admin');
 
 Route::get('admin/widget',[AdminController::class,'widget'])->name('admin.widget');
 
-Auth::routes();
+Route::resource('adminList',AdminListController::class);
+
+Route::resource('role',RoleController::class);
+
+Route::resource('permission',PermissionController::class);
+
+Route::resource('post',PostController::class);
+
+Auth::routes(['register'=>false]);
 
 });
+
 //customer route
 
 Route::get('customer/home',[CustomerController::class,'customerHome'])->name('customer.home');

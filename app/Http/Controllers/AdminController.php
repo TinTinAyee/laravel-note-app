@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
     //
+    public function __construct()
+    {
+        $this->Middleware('auth');
+    }
 
     public function index()
     {

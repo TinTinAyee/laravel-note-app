@@ -24,8 +24,13 @@
                 <div class="row">
                     <div class="col">
                         <div class="card">
-                            <div class="card-header">
-                                <a href="{{ route('blog.create') }}" class="btn btn-primary">Add New</a>
+                            <div class="card-header d-flex">
+                                <h4>DataTable with havor</h4>
+
+                                @can('blogCreate')
+                                    <a href="{{ route('blog.create') }}" class="btn btn-primary ml-auto">Add New</a>
+                                @endcan
+
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -35,6 +40,9 @@
                                             <th scope="col">ID</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Description</th>
+                                            <th scope="col">Image</th>
+                                            <th scope="col">Author</th>
+                                            <th scope="col">Status</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -45,16 +53,37 @@
                                                 <td>{{ $val->name }}</td>
                                                 <td>{{ $val->description }}</td>
                                                 <td>
-                                                    <a href="{{ route('blog.edit', $val->id) }}" class="btn btn-primary">Edit</a>
+                                                    <img src="{{ asset('storage/' . $val->image) }}" alt="img"
+                                                        width="50px">
+                                                </td>
+                                                <td>{{ $val->author->name }}</td>
+                                                <td>
+                                                    @if ($val->status == true)
+                                                        <span class="badge badge-info">Active</span>
+                                                    @else
+                                                        <span class="badge badge-warning">Not Active</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @can('blogEdit')
+                                                        <a href="{{ route('blog.edit', $val->id) }}"
+                                                            class="btn btn-primary">Edit</a>
+                                                    @endcan
 
-                                                    <a href="{{ route('blog.show', $val->id) }}" class="btn btn-success">view</a>
+                                                    @can('blogShow')
+                                                        <a href="{{ route('blog.show', $val->id) }}"
+                                                            class="btn btn-success">view</a>
+                                                    @endcan
 
-                                                    <form action="{{ route('blog.destroy', $val->id) }}" method="POST" class="d-inline">
-                                                        @csrf
-                                                        {{-- @method('DELETE') --}}
-                                                        <button class="btn btn-danger"
-                                                            onclick="return confirm('{{ 'Are you sure you want to delete ?' }}')">Delete</button>
-                                                    </form>
+                                                    @can('blogDelete')
+                                                        <form action="{{ route('blog.destroy', $val->id) }}" method="POST"
+                                                            class="d-inline">
+                                                            @csrf
+                                                            {{-- @method('DELETE') --}}
+                                                            <button class="btn btn-danger"
+                                                                onclick="return confirm('{{ 'Are you sure you want to delete ?' }}')">Delete</button>
+                                                        </form>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach
